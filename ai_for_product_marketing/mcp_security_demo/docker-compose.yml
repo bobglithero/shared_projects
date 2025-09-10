@@ -1,0 +1,44 @@
+# docker-compose.yml
+version: '3.8'
+
+services:
+  mcp-demo:
+    build: .
+    container_name: mcp-security-demo
+    ports:
+      - "3000:8080"    # Open WebUI
+      - "9080:9080"    # Capture Server
+    volumes:
+      - demo-logs:/demo/logs
+      - demo-data:/demo/data
+    environment:
+      - DEMO_MODE=true
+      - WEBUI_PORT=8080
+      - CAPTURE_PORT=9080
+      - PYTHONUNBUFFERED=1
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
+
+  monitor:
+    build: .
+    container_name: mcp-demo-monitor
+    depends_on:
+      - mcp-demo
+    volumes:
+      - demo-logs:/demo/logs:ro
+    command: ["python", "/demo/scripts/monitor_attack.py"]
+    profiles:
+      - monitoring
+
+volumes:
+  demo-logs:
+  demo-data:
+
+networks:
+  default:
+    driver: bridge
