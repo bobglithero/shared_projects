@@ -1,10 +1,3 @@
-
-
-
-Here is a comprehensive README file for your GitHub repository, properly crediting SlowMist and contextualizing the project based on the linked article:
-
----
-
 # MCP Security Demonstration Environment
 
 ![Educational Use Only](https://img.shields.io/badge/Status-Educational%20Use%20Only-orange)
